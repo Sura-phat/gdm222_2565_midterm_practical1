@@ -4,27 +4,55 @@ using UnityEngine;
 
 public class Fractal : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject cubePrefab;
+    public int size = (int) Mathf.Pow(3,1);
+    public int x = 0;
+    public int y = 0;
+    public int z = 0;
+    public GameObject pointPrefab;
 
-    [SerializeField]
-    private int iteration;
-
-    [SerializeField]
-    private float size;
-
+    public int iteration;
     void Start()
     {
-        //  This statement create a game object given a prefab, position and rotation.
-        Instantiate(
-            //  This parameter sets a prefab for an instance to be created.
-            cubePrefab,
+        GenerateMengerSponge(size, x, y, z);
+    }
 
-            //  This parameter sets an instance position to (0, 0, 0).
-            Vector3.zero,
+    public void GenerateMengerSponge(int size, int x, int y, int z)
+    {
+        if(size > 1f)
+        {
+            size /= 3;
 
-            //  This parameter sets an instance rotation to (0, 0, 0).
-            Quaternion.identity
-        );
+            //front side
+            GenerateMengerSponge(size, x, y, z);
+            GenerateMengerSponge(size, x+size, y, z);
+            GenerateMengerSponge(size, x+2*size, y, z);
+            GenerateMengerSponge(size, x+2*size, y+size, z);
+            GenerateMengerSponge(size, x, y+size, z);
+            GenerateMengerSponge(size, x, y+2*size, z);
+            GenerateMengerSponge(size, x+size, y+2*size, z);
+            GenerateMengerSponge(size, x+2*size, y+2*size, z);
+            
+            //Z edges
+            GenerateMengerSponge(size, x, y, z+size);
+            GenerateMengerSponge(size, x+2*size, y, z+size);
+            GenerateMengerSponge(size, x, y+2*size, z+size);
+            GenerateMengerSponge(size, x+2*size, y+2*size, z+size);
+
+            //back side
+            GenerateMengerSponge(size, x, y, z+2*size);
+            GenerateMengerSponge(size, x+size, y, z+2*size);
+            GenerateMengerSponge(size, x+2*size, y, z+2*size);
+            GenerateMengerSponge(size, x+2*size, y+size, z+2*size);
+            GenerateMengerSponge(size, x, y+size, z+2*size);
+            GenerateMengerSponge(size, x, y+2*size, z+2*size);
+            GenerateMengerSponge(size, x+size, y+2*size, z+2*size);
+            GenerateMengerSponge(size, x+2*size, y+2*size, z+2*size);
+            
+        } 
+        else
+        {
+            GameObject p = Instantiate(pointPrefab, new Vector3(x, y, z), Quaternion.identity, transform.parent);
+            p.transform.parent = transform;
+        }
     }
 }
